@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "implementation-practice"
+version = "0.1.0"
+description = ""
+authors = ["박정민 <pjm14418@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.8"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
