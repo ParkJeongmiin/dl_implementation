@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "implementation-practice"
+name = "dl-template"
 version = "0.1.0"
 description = ""
 authors = ["박정민 <pjm14418@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "3.8"
+python = "^3.11"
 
 
 [build-system]
