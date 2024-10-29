@@ -49,6 +49,27 @@ model = VGG11(num_classes=num_classes).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
+
+def evaluate(model, test_loader):
+    print(f"Test data를 사용해 모델의 성능을 측정합니다.")
+    model.eval()
+
+    correct = 0
+    total = 0
+
+    with torch.no_grad():
+        for images, labels in test_loader:
+            images = images.to(device)
+            labels = labels.to(device)
+
+            outputs = model(images)
+            _, preds = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (preds == labels).sum().item()
+
+    return correct / total
+
+
 best_acc = 0
 for epoch in range(num_epochs):
     model.train()
@@ -74,4 +95,9 @@ for epoch in range(num_epochs):
             print(
                 f"Epoch [{epoch + 1} / {num_epochs}], Step [{i + 1} / {len(train_loader)}], Loss : {loss.item()}"
             )
-        # 성능이 만족스럽다면 weight 저장
+
+            acc = evaluate(model, test_loader=test_loader)
+            # 성능이 만족스럽다면 weight 저장
+            if acc > best_acc:
+                best_acc = acc
+                torch.save(model.state_dict(), f"./best_model.ckpt")
