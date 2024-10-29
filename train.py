@@ -1,6 +1,7 @@
 # 필요한 라이브러리 import
 import torch
 import torch.nn as nn
+import numpy as np
 from torch import optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
@@ -11,7 +12,7 @@ from model.vgg import VGG11
 # 하이퍼 파라미터 정의 (epoch, lr, etc...)
 batch_size = 100
 num_classes = 10
-epoch = 10
+num_epochs = 10
 lr = 0.0001
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -45,16 +46,32 @@ test_loader = DataLoader(
 model = VGG11(num_classes=num_classes).to(device)
 
 # loss, optimizer 정의
-loss = nn.CrossEntropyLoss()
+criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
-# (for) 데이터 불러오기
-# 불러온 데이터 모델에 넣기
+best_acc = 0
+for epoch in range(num_epochs):
+    model.train()
 
-# 출력을 바탕으로 loss 계산
-# loss로 back propagation
-# optimizer로 최적화 진행
+    # (for) 데이터 불러오기
+    for i, (images, labels) in enumerate(train_loader):
+        images = images.to(device)
+        labels = labels.to(device)
 
+        # 불러온 데이터 모델에 넣기
+        outputs = model(images)  # [batch, 10]
+        loss = criterion(outputs, labels)
 
-# 학습 중간 결과로 성능을 평가
-# 성능이 만족스럽다면 weight 저장
+        # 출력을 바탕으로 loss 계산
+        # loss로 back propagation
+        # optimizer로 최적화 진행
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad()
+
+        # 학습 중간 결과로 성능을 평가
+        if (i + 1) % 100 == 0:
+            print(
+                f"Epoch [{epoch + 1} / {num_epochs}], Step [{i + 1} / {len(train_loader)}], Loss : {loss.item()}"
+            )
+        # 성능이 만족스럽다면 weight 저장
