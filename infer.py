@@ -3,8 +3,11 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
+from model.vgg import VGG11
+
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+num_classes = 10
 
 # 추론에 사용할 데이터를 준비 (전처리)
 image_path = "test_image.jpeg"
@@ -23,7 +26,12 @@ image = image.unsqueeze(0).to(device)
 
 ## 학습이 완료된 최고의 모델을 준비하기
 # 설계도 + Hparam 모델 껍대기 만들기
+model = VGG11(num_classes=num_classes)
+
 # 속이 빈 모델에 학습된 모델의 wieght를 덮어 씌우기
+weight = torch.load("best_model.ckpt", map_location=device)
+model.load_state_dict(weight)
+model = model.to(device)
 
 # 준비된 데이터를 모델에 넣기
 
