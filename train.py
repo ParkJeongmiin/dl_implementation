@@ -1,5 +1,7 @@
 # 필요한 라이브러리 import
 import torch
+import torch.nn as nn
+from torch import optim
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
@@ -43,6 +45,8 @@ test_loader = DataLoader(
 model = VGG11(num_classes=num_classes).to(device)
 
 # loss, optimizer 정의
+loss = nn.CrossEntropyLoss()
+optimizer = optim.Adam(model.parameters(), lr=lr)
 
 # (for) 데이터 불러오기
 # 불러온 데이터 모델에 넣기
