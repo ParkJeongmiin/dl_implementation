@@ -1,7 +1,14 @@
 # 필요한 라이브러리 import
+import torch
 
 
 # 하이퍼 파라미터 정의 (epoch, lr, etc...)
+batch_size = 100
+num_classes = 10
+epoch = 10
+lr = 0.0001
+
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # 데이터 load (Dataset)
 ## 데이터 전처리
