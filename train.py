@@ -3,6 +3,8 @@ import torch
 from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
+from model.vgg import VGG11
+
 
 # 하이퍼 파라미터 정의 (epoch, lr, etc...)
 batch_size = 100
@@ -38,6 +40,7 @@ test_loader = DataLoader(
 )
 
 # 모델 선언
+model = VGG11(num_classes=num_classes).to(device)
 
 # loss, optimizer 정의
 
