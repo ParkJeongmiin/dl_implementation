@@ -1,5 +1,7 @@
 # 필요한 라이브러리 import
 import torch
+from torchvision import datasets, transforms
+from torch.utils.data import DataLoader
 
 
 # 하이퍼 파라미터 정의 (epoch, lr, etc...)
@@ -12,8 +14,28 @@ device = "cuda" if torch.cuda.is_available() else "cpu"
 
 # 데이터 load (Dataset)
 ## 데이터 전처리
+## cifar10 이미지의 평균과 표준편차
+CIFAR_MEAN = [0.491, 0.482, 0.447]
+CIFAR_STD = [0.247, 0.244, 0.262]
+
+transform = transforms.Compose(
+    [transforms.ToTensor(), transforms.Normalize(mean=CIFAR_MEAN, std=CIFAR_STD)]
+)
+
+train_dataset = datasets.CIFAR10(
+    root="./data", train=True, download=True, transform=transform
+)
+test_datasets = datasets.CIFAR10(
+    root="./data", train=False, download=True, transform=transform
+)
 
 # 데이터 로더 정의 (DataLoader)
+train_loader = DataLoader(
+    dataset=train_dataset, batch_size=batch_size, shuffle=True, num_workers=0
+)
+test_loader = DataLoader(
+    dataset=test_datasets, batch_size=batch_size, shuffle=False, num_workers=0
+)
 
 # 모델 선언
 
