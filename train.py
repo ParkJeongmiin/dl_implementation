@@ -7,6 +7,7 @@ from torchvision import datasets, transforms
 from torch.utils.data import DataLoader
 
 from model.vgg import VGG11
+from utils.tools import evaluate
 
 
 # 하이퍼 파라미터 정의 (epoch, lr, etc...)
@@ -49,28 +50,6 @@ model = VGG11(num_classes=num_classes).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
-
-def evaluate(model, test_loader):
-    print(f"Test data를 사용해 모델의 성능을 측정합니다.")
-    model.eval()
-
-    correct = 0
-    total = 0
-
-    with torch.no_grad():
-        for images, labels in test_loader:
-            images = images.to(device)
-            labels = labels.to(device)
-
-            outputs = model(images)
-            _, preds = torch.max(outputs.data, 1)
-            total += labels.size(0)
-            correct += (preds == labels).sum().item()
-
-    return correct / total
-
-
-best_acc = 0
 for epoch in range(num_epochs):
     model.train()
 
