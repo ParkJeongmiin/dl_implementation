@@ -50,6 +50,7 @@ model = VGG11(num_classes=num_classes).to(device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=lr)
 
+best_acc = 0
 for epoch in range(num_epochs):
     model.train()
 
@@ -75,8 +76,9 @@ for epoch in range(num_epochs):
                 f"Epoch [{epoch + 1} / {num_epochs}], Step [{i + 1} / {len(train_loader)}], Loss : {loss.item()}"
             )
 
-            acc = evaluate(model, test_loader=test_loader)
+            acc = evaluate(model, test_loader=test_loader, device=device)
             # 성능이 만족스럽다면 weight 저장
             if acc > best_acc:
                 best_acc = acc
+                print(f"Best Accuracy : {best_acc:.2f}")
                 torch.save(model.state_dict(), f"./best_model.ckpt")
